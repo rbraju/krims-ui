@@ -21,7 +21,7 @@ class AddTutorial extends Component {
       source: "server-001",
       location: "San Francisco, US",
       description: "CPU Usage is high - 95%",
-      service: "server-001",
+      service: "checkout",
       eventtype: "event",
       status: "Open",
       base: "cpu",
@@ -122,7 +122,7 @@ class AddTutorial extends Component {
 
   render() {
     return (
-      <div className="submit-form">
+      <div className="send-event">
         {this.state.submitted ? (
           <div>
             <h4>You submitted successfully!</h4>
@@ -132,67 +132,55 @@ class AddTutorial extends Component {
           </div>
         ) : (
           <div>
-            <div className="form-group">
-              <label htmlFor="description">Description</label>
-              <input type="text" className="form-control" id="description" required value={this.state.description}
-                onChange={this.onChangeDescription} name="description" />
-            </div>
+            <table>
+              <tr height="50px">
+                <td width="10%">Source</td><td width="2%">&nbsp;</td>
+                <td width="33%">
+                  <input type="text" className="form-control" id="source" required value={this.state.source}
+                    onChange={this.onChangeSource} name="source" />
+                </td>
+                <td width="10%">&nbsp;</td><td width="10%">Decsription</td><td width="2%">&nbsp;</td>
+                <td width="33%">
+                  <input type="text" className="form-control" id="description" required value={this.state.description}
+                    onChange={this.onChangeDescription} name="description" />
+                </td>
+              </tr>
 
-            <div className="form-group">
-              <label htmlFor="source">source</label>
-              <input type="text" className="form-control" id="source" required value={this.state.source}
-                onChange={this.onChangeSource} name="source" />
-            </div>
+              <tr height="50px">
+                <td width="10%">Service</td><td width="2%">&nbsp;</td>
+                <td width="33%">
+                  <input type="text" className="form-control" id="service" required value={this.state.service}
+                    onChange={this.onChangeService} name="service" />
+                </td>
+                <td width="10%">&nbsp;</td><td width="10%">Base</td><td width="2%">&nbsp;</td>
+                <td width="33%">
+                  <input type="text" className="form-control" id="base" required value={this.state.base}
+                    onChange={this.onChangeBase} name="base" />
+                </td>
+              </tr>
 
-            <div className="form-group">
-              <label htmlFor="location">location</label>
-              <input type="text" className="form-control" id="location" required value={this.state.location}
-                onChange={this.onChangeLocation} name="location" />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="service">service</label>
-              <input type="text" className="form-control" id="service" required value={this.state.service}
-                onChange={this.onChangeService} name="service" />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="severity">severity</label>
-              <input type="text" className="form-control" id="severity" required value={this.state.severity}
-                onChange={this.onChangeSeverity} name="severity" />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="status">status</label>
-              <input type="text" className="form-control" id="status" required value={this.state.status}
-                onChange={this.onChangeStatus} name="status" />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="base">base</label>
-              <input type="text" className="form-control" id="base" required value={this.state.base}
-                onChange={this.onChangeBase} name="base" />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="eventtype">eventtype</label>
-              <input type="text" className="form-control" id="eventtype" required value={this.state.eventtype}
-                onChange={this.onChangeEventtype} name="eventtype" />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="title">Title</label>
-              <input
-                type="text"
-                className="form-control"
-                id="title"
-                required
-                value={this.state.title}
-                onChange={this.onChangeTitle}
-                name="title"
-              />
-            </div>
-
+              <tr height="50px">
+                <td width="10%">Severity</td><td width="2%">&nbsp;</td>
+                <td width="33%">
+                  <input type="text" className="form-control" id="severity" required value={this.state.severity}
+                    onChange={this.onChangeSeverity} name="severity" />
+                </td>
+                <td width="10%">&nbsp;</td><td width="10%">Location</td><td width="2%">&nbsp;</td>
+                <td width="33%">
+                  <input type="text" className="form-control" id="location" required value={this.state.location}
+                    onChange={this.onChangeLocation} name="location" />
+                </td>
+              </tr>
+              
+              <tr height="50px">
+                <td width="10%">Event Type</td><td width="2%">&nbsp;</td>
+                <td width="33%">
+                  <input type="text" className="form-control" id="eventtype" required value={this.state.eventtype}
+                    onChange={this.onChangeEventtype} name="eventtype" />
+                </td>
+                <td>&nbsp;</td>
+              </tr>
+            </table>
 
             <button onClick={this.saveTutorial} className="btn btn-success">
               Submit
