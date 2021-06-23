@@ -23,21 +23,21 @@ class Incidents extends Component {
       currentTutorial: null,
       currentIndex: -1,
       searchTitle: "",
-      rowData: [],
+      rowDatax: [],
       columnDefs: [
-        { headerName: 'Source', field: 'source' },
+        { headerName: 'Incident ID', field: 'incident_id' },
         { headerName: 'Description', field: 'description' },
+        { headerName: 'Sources', field: 'sources' },
         { headerName: 'Service', field: 'service' },
         { headerName: 'Severity', field: 'severity' },
-        { headerName: 'Location', field: 'location', editable: true },
-        { headerName: 'Base', field: 'base' }
+        { headerName: 'assignee', field: 'assignee', editable: true }
       ],
     };
   }
 
   componentDidMount() {
     this.state.rowData = this.props.retrieveTutorials()
-    fetch('http://localhost:8787/krims/alerts')
+    fetch('http://localhost:8787/krims/incidents')
       .then(result => result.json())
       .then(rowData => this.setState({ rowData }))
   }
@@ -98,6 +98,7 @@ class Incidents extends Component {
             </AgGridReact>
           </div>
         </div>
+        
       </div>
     );
   }

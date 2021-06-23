@@ -1,121 +1,84 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {
-  retrieveTutorials,
-  findTutorialsByTitle,
-  deleteAllTutorials,
-} from "../actions/tutorials";
 import { Link } from "react-router-dom";
 import { AgGridColumn, AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 // import 'ag-grid-community/dist/styles/ag-theme-alpine-dark.css';
 
 class Alerts extends Component {
-  constructor(props) {
-    super(props);
-    this.onChangeSearchTitle = this.onChangeSearchTitle.bind(this);
-    this.refreshData = this.refreshData.bind(this);
-    this.setActiveTutorial = this.setActiveTutorial.bind(this);
-    this.findByTitle = this.findByTitle.bind(this);
-    this.removeAllTutorials = this.removeAllTutorials.bind(this);
+  state = {
+    alerts: []
+  };
 
-    this.state = {
-      currentTutorial: null,
-      currentIndex: -1,
-      searchTitle: "",
-      rowData: [],
-      columnDefs: [
-        { headerName: 'Severity', field: 'severity' },
-        { headerName: 'Source', field: 'source' },
-        { headerName: 'Description', field: 'description' },
-        { headerName: 'Service', field: 'service' },
-        { headerName: 'Assignee', field: 'assignee' },
-        { headerName: 'Status', field: 'status' },
-        { headerName: 'Location', field: 'location', editable: true },
-        { headerName: 'Base', field: 'base' }
-      ],
-    };
+  async componentDidMount() {
+    const response = await fetch(`http://localhost:8787/krims/alerts`);
+    const body = await response.json();
+    this.setState({ alerts: body });
   }
 
-  componentDidMount() {
-    // this.state.rowData = this.props.retrieveTutorials()
-    fetch('http://localhost:8787/krims/alerts')
-      .then(result => result.json())
-      .then(rowData => this.setState({ rowData }))
-  }
-  // componentDidMount() {
-  // this.props.retrieveTutorials().then(rowData => this.setState({ rowData }));
-  // }
+  async update(id) {
+    await fetch(`http://localhost:8787/krims/alerts/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }).then(() => {
 
-  onChangeSearchTitle(e) {
-    const searchTitle = e.target.value;
-
-    this.setState({
-      searchTitle: searchTitle,
     });
-  }
-
-  refreshData() {
-    this.setState({
-      currentTutorial: null,
-      currentIndex: -1,
-    });
-  }
-
-  setActiveTutorial(tutorial, index) {
-    this.setState({
-      currentTutorial: tutorial,
-      currentIndex: index,
-    });
-  }
-
-  removeAllTutorials() {
-    this.props
-      .deleteAllTutorials()
-      .then((response) => {
-        console.log(response);
-        this.refreshData();
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }
-
-  findByTitle() {
-    this.refreshData();
-
-    this.props.findTutorialsByTitle(this.state.searchTitle);
   }
 
   render() {
-    const { searchTitle, currentTutorial, currentIndex } = this.state;
-    const { alerts } = this.props;
-    const ColourCellRenderer = props => <span style={{color: props.color}}>{props.value}</span>;
-    const frameworkComponents = {
-      'colourCellRenderer': ColourCellRenderer
-    };
-    
+    const { alerts } = this.state;
+    let tt = "123";
+
     return (
-      <div align="left">
-        <div>
-          <div className="ag-theme-alpine" style={{ height: 400, width: '100%' }}>
-            <AgGridReact enableSorting={true} columnDefs={this.state.columnDefs} rowData={this.state.rowData}>
-            </AgGridReact>
+      <div>
+        <header className="app-header">
+          <div className="data">
+            <div class="data-row-header">
+              <div class="data-col-header">Alert ID</div>
+              <div class="data-col-header">Severity</div>
+              <div class="data-col-header">Source</div>
+              <div class="data-col-medium">Assignee ID</div>
+              <div class="data-col-header-large">Description</div>
+              <div class="data-col-medium">Status</div>
+              <div class="data-col-header">Location</div>
+            </div>
+
+            {alerts.map(alert =>
+              <div class="data-row">
+                <div class="data-col">{alert.alert_id}</div>
+                <div class="data-col">{alert.severity}</div>
+                <div class="data-col">{alert.source}</div>
+                <div class="data-col-medium">{alert.assignee}</div>
+                <div class="data-col-large">{alert.description}</div>
+                <div class="data-col-medium"> {
+                  (alert.status == 'Open') ? 
+                  <select>
+                    <option selected>Open</option>
+                    <option>In Progress</option>
+                    <option>Closed</option>
+                  </select> 
+                  :
+                  <select>
+                  <option>Open</option>
+                  <option selected>In Progress</option>
+                  <option>Closed</option>
+                </select> 
+
+                } </div>
+                <div class="data-col">{alert.location}</div>
+                <div class="data-col">
+                  <a href="javascript:update(5);" class="btn-gradient blue mini">Update</a>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
+        </header>
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    tutorials: state.tutorials,
-  };
-};
-
-export default connect(mapStateToProps, {
-  retrieveTutorials,
-  findTutorialsByTitle,
-  deleteAllTutorials,
-})(Alerts);
+export default Alerts;
